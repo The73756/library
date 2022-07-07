@@ -6,6 +6,12 @@ $.prototype.init = function (selector) {
 	if (!selector) {
 		return this; // {}
 	}
+
+	if (selector.tagName) {
+		this[0] = selector;
+		this[0].length = 1;
+		return this;
+	}
 	Object.assign(this, document.querySelectorAll(selector));
 	this.length = document.querySelectorAll(selector).length;
 
