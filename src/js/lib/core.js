@@ -9,16 +9,17 @@ $.prototype.init = function (selector) {
 
 	if (selector.tagName) {
 		this[0] = selector;
-		this[0].length = 1;
+		this.length = 1;
 		return this;
 	}
+
 	Object.assign(this, document.querySelectorAll(selector));
 	this.length = document.querySelectorAll(selector).length;
-
 	return this;
 };
 
 $.prototype.init.prototype = $.prototype;
+
 window.$ = $;
 
 export default $;
