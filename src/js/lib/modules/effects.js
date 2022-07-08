@@ -24,7 +24,7 @@ $.prototype.animateOverTime = function (dur, cb, fin) {
 	return _animateOverTime;
 };
 
-$.prototype.fadeIn = function (dur, display = 'block', fin,) {
+$.prototype.fadeIn = function (dur, display = 'block', fin, ) {
 	for (let i = 0; i < this.length; i++) {
 		this[i].style.display = display;
 
@@ -35,11 +35,13 @@ $.prototype.fadeIn = function (dur, display = 'block', fin,) {
 		const ani = this.animateOverTime(dur, _fadeIn, fin);
 		requestAnimationFrame(ani);
 	}
+
+	return this;
 };
 
-$.prototype.fadeOut = function (dur, fin,) {
+$.prototype.fadeOut = function (dur, fin, ) {
 	for (let i = 0; i < this.length; i++) {
-		
+
 		const _fadeOut = (complection) => {
 			this[i].style.opacity = 1 - complection;
 
@@ -51,4 +53,35 @@ $.prototype.fadeOut = function (dur, fin,) {
 		const ani = this.animateOverTime(dur, _fadeOut, fin);
 		requestAnimationFrame(ani);
 	}
+
+	return this;
+};
+
+$.prototype.fadeToggle = function (dur, display = 'block', fin, ) {
+	for (let i = 0; i < this.length; i++) {
+
+		if (window.getComputedStyle(this[i]).display === 'none') {
+			this[i].style.display = display;
+
+			const _fadeIn = (complection) => {
+				this[i].style.opacity = complection;
+			};
+
+			const ani = this.animateOverTime(dur, _fadeIn, fin);
+			requestAnimationFrame(ani);
+		} else {
+			const _fadeOut = (complection) => {
+				this[i].style.opacity = 1 - complection;
+
+				if (complection === 1) {
+					this[i].style.display = 'none';
+				}
+			};
+
+			const ani = this.animateOverTime(dur, _fadeOut, fin);
+			requestAnimationFrame(ani);
+		}
+	}
+	
+	return this;
 };
