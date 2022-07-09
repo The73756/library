@@ -1,48 +1,72 @@
 function dropdown() {
 	const trigger = document.querySelector('[data-dd-target]');
-
 	let path = trigger.getAttribute('data-dd-target');
-
+	let index = -1;
+	let isOpened = false;
 	const menu = document.querySelector(`[data-dd-path="${path}"]`);
-	const menuItems = menu.querySelectorAll('li');
-	const menuLinks = menu.querySelectorAll('a');
+	const menuItems = menu.querySelectorAll('.dropdown-menu__link');
 
-	trigger.addEventListener('focus', () => {
-		menu.classList.add('dropdown-menu--active');
-		let index = -1;
+	function toggleClass(element, className, removeClass = true) {
+		if (removeClass && element.classList.contains(className)) {
+			element.classList.remove(className);
+			isOpened = false;
+		} else {
+			element.classList.add(className);
+			setTimeout (() => {
+				isOpened = true;
+			});
+		}
+	}
 
-		trigger.addEventListener('keydown', (e) => {
-			if (e.code === 'ArrowUp') {
-				index--;
+	function deleteActiveClass(className) {
+		for (let i = 0; i < menuItems.length; i++) {
+			menuItems[i].classList.remove(className);
+		}
+	}
 
-				if (index < 0) {
-					index = menuItems.length - 1;
-				}
-				for (let i = 0; i < menuItems.length; i++) {
-					menuItems[i].classList.remove('dropdown-menu__item--active');
-				}
+	trigger.addEventListener('click', (e) => {
+		e.preventDefault();
+		toggleClass(menu, 'dropdown-menu--active');
+	});
 
-				menuItems[index].classList.add('dropdown-menu__item--active');
-			} 
-			
-			if (e.code === 'ArrowDown') {
-				index++;
+	trigger.addEventListener('blur', (e) => {
+		menu.classList.remove('dropdown-menu--active');
+	});
 
-				if (index > menuItems.length - 1) {
-					index = 0;
-				}
+	trigger.addEventListener('keydown', (e) => {		
+		if (e.code === 'Enter') {
+			e.preventDefault();
+			toggleClass(menu, 'dropdown-menu--active', false);
+		}
+	});
 
-				for (let i = 0; i < menuItems.length; i++) {
-					menuItems[i].classList.remove('dropdown-menu__item--active');
-				}
-
-				menuItems[index].classList.add('dropdown-menu__item--active');
+	trigger.addEventListener('keydown', (e) => {
+		//if переписать на case 
+		if (e.code === 'ArrowUp') {
+			index--;
+			if (index < 0) {
+				index = menuItems.length - 1;
 			}
 
-			if (e.code === 'Enter' && menuLinks) {
-				menuLinks[index].click();
+			deleteActiveClass('dropdown-menu__link--active');
+			menuItems[index].classList.add('dropdown-menu__link--active');
+		}
+
+		if (e.code === 'ArrowDown') {
+			index++;
+
+			if (index > menuItems.length - 1) {
+				index = 0;
 			}
-		});
+			deleteActiveClass('dropdown-menu__link--active');
+			menuItems[index].classList.add('dropdown-menu__link--active');
+		}
+
+		if (e.code === 'Enter' && isOpened) {
+			console.log('sadasdad');
+			menuItems[index].click();
+			trigger.blur();
+		}
 	});
 
 }

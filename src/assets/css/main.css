@@ -367,32 +367,23 @@
 	display: block;
 }
 
-.dropdown-menu__item {
+.dropdown-menu__link {
 	display: block;
 	margin: 0;
 	padding: 0;
-	list-style: none;
 	width: 100%;
 	padding: 7px 10px;
 	background-color: transparent;
 	border: none;
-}
-
-.dropdown-menu__item--active {
-	background-color: rgba(0, 0, 0, 0.5) !important;
-}
-
-.dropdown-menu__item:hover {
-	background-color: rgba(0, 0, 0, 0.05);
-}
-
-.dropdown-menu__link {
-	margin: 0;
-	padding: 0;
 	text-decoration: none;
 	color: black;
 }
 
+.dropdown-menu__link--active {
+	background-color: rgba(0, 0, 0, 0.5) !important;
+}
 
-
+.dropdown-menu__link:hover {
+	background-color: rgba(0, 0, 0, 0.05);
+}
 /* Dropdovn end*/
