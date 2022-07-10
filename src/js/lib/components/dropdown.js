@@ -69,9 +69,7 @@ function dropdown() {
 				e.preventDefault();
 				toggleClass(menu, 'dropdown-menu--active');
 			}
-		});
 
-		trigger.addEventListener('keydown', (e) => {
 			if (isOpened) {
 				switch (e.code) {
 					case 'ArrowUp':
@@ -89,20 +87,19 @@ function dropdown() {
 						}
 						addActiveClassMenuEl(menuItems, 'dropdown-menu__link--active');
 						break;
-				}
 
-				if (e.code === 'Enter' && isOpened) {
-					isOpened = false;
-					deleteActiveClassInArr(menuItems, 'dropdown-menu__link--active');
+					case 'Enter':
+						isOpened = false;
+						deleteActiveClassInArr(menuItems, 'dropdown-menu__link--active');
 
-					if (index > -1) {
-						menuItems[index].click();
-						trigger.blur();
-					}
+						if (index > -1) {
+							menuItems[index].click();
+							trigger.blur();
+						}
+						break;
 				}
 			}
 		});
-
 	});
 }
 
