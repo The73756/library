@@ -365,6 +365,7 @@
 
 .dropdown-menu--active {
 	display: block;
+	animation: fadeIn 0.3s ease-in-out;
 }
 
 .dropdown-menu__link {
@@ -386,4 +387,15 @@
 .dropdown-menu__link:hover {
 	background-color: rgba(0, 0, 0, 0.05);
 }
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
 /* Dropdovn end*/
