@@ -1,74 +1,109 @@
 function dropdown() {
-	const trigger = document.querySelector('[data-dd-target]');
-	let path = trigger.getAttribute('data-dd-target');
-	let index = -1;
-	let isOpened = false;
-	const menu = document.querySelector(`[data-dd-path="${path}"]`);
-	const menuItems = menu.querySelectorAll('.dropdown-menu__link');
+	const triggers = document.querySelectorAll('[data-dd-target]');
 
-	function toggleClass(element, className, removeClass = true) {
-		if (removeClass && element.classList.contains(className)) {
-			element.classList.remove(className);
-			isOpened = false;
+	let index = -1,
+		isOpened = false;
+
+	function toggleClass(element, className) {
+
+		if (element.classList.contains(className)) {
+			setTimeout(() => {
+				element.classList.remove(className);
+				isOpened = false;
+			});
 		} else {
-			element.classList.add(className);
-			setTimeout (() => {
+			setTimeout(() => {
+				element.classList.add(className);
 				isOpened = true;
 			});
 		}
 	}
 
-	function deleteActiveClass(className) {
-		for (let i = 0; i < menuItems.length; i++) {
-			menuItems[i].classList.remove(className);
+	function deleteActiveClassInArr(arr, className) {
+		for (let i = 0; i < arr.length; i++) {
+			arr[i].classList.remove(className);
 		}
 	}
 
-	trigger.addEventListener('click', (e) => {
-		e.preventDefault();
-		toggleClass(menu, 'dropdown-menu--active');
-	});
+	function addActiveClassMenuEl(arr, className) {
+		deleteActiveClassInArr(arr, className);
+		arr[index].classList.add(className);
+	}
 
-	trigger.addEventListener('blur', (e) => {
-		menu.classList.remove('dropdown-menu--active');
-	});
+	function closeMenu(menu, activeClass) {
+		index = -1;
+		isOpened = false;
+		menu.classList.remove(activeClass);
+	}
 
-	trigger.addEventListener('keydown', (e) => {		
-		if (e.code === 'Enter') {
+	triggers.forEach(trigger => {
+		const path = trigger.getAttribute('data-dd-target'),
+			menu = document.querySelector(`[data-dd-path="${path}"]`),
+			menuItems = menu.querySelectorAll('.dropdown-menu__link');
+
+		index = -1;
+		isOpened = false;
+
+		trigger.addEventListener('click', (e) => {
 			e.preventDefault();
-			toggleClass(menu, 'dropdown-menu--active', false);
-		}
-	});
+			toggleClass(menu, 'dropdown-menu--active');
+		});
 
-	trigger.addEventListener('keydown', (e) => {
-		//if переписать на case 
-		if (e.code === 'ArrowUp') {
-			index--;
-			if (index < 0) {
-				index = menuItems.length - 1;
+		trigger.addEventListener('blur', () => {
+			if (!isOpened) {
+				closeMenu(menu, 'dropdown-menu--active');
 			}
+		});
 
-			deleteActiveClass('dropdown-menu__link--active');
-			menuItems[index].classList.add('dropdown-menu__link--active');
-		}
+		menu.addEventListener('mouseup', (e) => {
+			const target = e.target;
 
-		if (e.code === 'ArrowDown') {
-			index++;
-
-			if (index > menuItems.length - 1) {
-				index = 0;
+			if (target && target.classList.contains('dropdown-menu__link')) {
+				trigger.blur();
+				closeMenu(menu, 'dropdown-menu--active');
 			}
-			deleteActiveClass('dropdown-menu__link--active');
-			menuItems[index].classList.add('dropdown-menu__link--active');
-		}
+		});
 
-		if (e.code === 'Enter' && isOpened) {
-			console.log('sadasdad');
-			menuItems[index].click();
-			trigger.blur();
-		}
+		trigger.addEventListener('keydown', (e) => {
+			if (e.code === 'Enter') {
+				e.preventDefault();
+				toggleClass(menu, 'dropdown-menu--active');
+			}
+		});
+
+		trigger.addEventListener('keydown', (e) => {
+			if (isOpened) {
+				switch (e.code) {
+					case 'ArrowUp':
+						index--;
+						if (index < 0) {
+							index = menuItems.length - 1;
+						}
+						addActiveClassMenuEl(menuItems, 'dropdown-menu__link--active');
+						break;
+
+					case 'ArrowDown':
+						index++;
+						if (index > menuItems.length - 1) {
+							index = 0;
+						}
+						addActiveClassMenuEl(menuItems, 'dropdown-menu__link--active');
+						break;
+				}
+
+				if (e.code === 'Enter' && isOpened) {
+					isOpened = false;
+					deleteActiveClassInArr(menuItems, 'dropdown-menu__link--active');
+
+					if (index > -1) {
+						menuItems[index].click();
+						trigger.blur();
+					}
+				}
+			}
+		});
+
 	});
-
 }
 
 export default dropdown;
