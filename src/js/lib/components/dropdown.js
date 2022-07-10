@@ -2,7 +2,8 @@ function dropdown() {
 	const triggers = document.querySelectorAll('[data-dd-target]');
 
 	let index = -1,
-		isOpened = false;
+		isOpened = false,
+		focusedEl = '';
 
 	function toggleClass(element, className) {
 
@@ -39,19 +40,33 @@ function dropdown() {
 	triggers.forEach(trigger => {
 		const path = trigger.getAttribute('data-dd-target'),
 			menu = document.querySelector(`[data-dd-path="${path}"]`),
-			menuItems = menu.querySelectorAll('.dropdown-menu__link');
+			menuItems = menu.querySelectorAll('.dropdown-menu__link'),
+			lastItem = menuItems[menuItems.length - 1];
 
-		index = -1;
-		isOpened = false;
+		menuItems.forEach(item => {
+			item.onfocus = (e) => {
+				focusedEl = e.target;
+			};
 
-		trigger.addEventListener('click', (e) => {
-			e.preventDefault();
-			toggleClass(menu, 'dropdown-menu--active');
+			item.addEventListener('keydown', (e) => {
+				if (e.code === 'Enter' && e.target === focusedEl) {
+					closeMenu(menu, 'dropdown-menu--active');
+				}
+			});
 		});
 
-		trigger.addEventListener('blur', () => {
-			if (!isOpened) {
+		document.addEventListener('click', (e) => {
+			const target = e.target;
+
+			if (target && target === trigger) {
+				e.preventDefault();
+				toggleClass(menu, 'dropdown-menu--active');
+			}
+
+			if (target && !(target == menu || target.classList.contains('dropdown-menu__link'))) {
+				index = -1;
 				closeMenu(menu, 'dropdown-menu--active');
+				deleteActiveClassInArr(menuItems, 'dropdown-menu__link--active');
 			}
 		});
 
@@ -59,9 +74,12 @@ function dropdown() {
 			const target = e.target;
 
 			if (target && target.classList.contains('dropdown-menu__link')) {
-				trigger.blur();
 				closeMenu(menu, 'dropdown-menu--active');
 			}
+		});
+
+		lastItem.addEventListener('blur', () => {
+			trigger.focus();
 		});
 
 		trigger.addEventListener('keydown', (e) => {
@@ -70,7 +88,12 @@ function dropdown() {
 				toggleClass(menu, 'dropdown-menu--active');
 			}
 
-			if (isOpened) {
+			if (e.code === 'Escape') {
+				closeMenu(menu, 'dropdown-menu--active');
+				deleteActiveClassInArr(menuItems, 'dropdown-menu__link--active');
+			}
+
+			if (isOpened && menuItems.length > 0) {
 				switch (e.code) {
 					case 'ArrowUp':
 						index--;
@@ -89,12 +112,11 @@ function dropdown() {
 						break;
 
 					case 'Enter':
-						isOpened = false;
 						deleteActiveClassInArr(menuItems, 'dropdown-menu__link--active');
 
 						if (index > -1) {
 							menuItems[index].click();
-							trigger.blur();
+							closeMenu(menu, 'dropdown-menu--active');
 						}
 						break;
 				}
