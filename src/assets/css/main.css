@@ -352,10 +352,13 @@
 
 .dropdown-menu {
 	position: absolute;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+
 	top: 100%;
 	left: 0;
 	z-index: 999;
-	display: none;
 	border: 1px solid rgba(0, 0, 0, 0.15);
 	border-radius: 4px;
 	background-color: #fff;
@@ -364,8 +367,8 @@
 }
 
 .dropdown-menu--active {
-	display: block;
-	animation: fadeIn 0.3s ease-in-out;
+	opacity: 1;
+	visibility: visible;
 }
 
 .dropdown-menu__link {

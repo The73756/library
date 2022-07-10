@@ -1,4 +1,4 @@
-function dropdown() {
+(function dropdown() {
 	const triggers = document.querySelectorAll('[data-dd-target]');
 
 	let index = -1,
@@ -44,9 +44,9 @@ function dropdown() {
 			lastItem = menuItems[menuItems.length - 1];
 
 		menuItems.forEach(item => {
-			item.onfocus = (e) => {
+			item.addEventListener('focus', (e) => {
 				focusedEl = e.target;
-			};
+			});
 
 			item.addEventListener('keydown', (e) => {
 				if (e.code === 'Enter' && e.target === focusedEl) {
@@ -123,6 +123,4 @@ function dropdown() {
 			}
 		});
 	});
-}
-
-export default dropdown;
+}());
