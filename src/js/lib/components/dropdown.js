@@ -52,6 +52,11 @@
 				if (e.code === 'Enter' && e.target === focusedEl) {
 					closeMenu(menu, 'dropdown-menu--active');
 				}
+
+				if (e.code === 'Escape' && focusedEl) {
+					closeMenu(menu, 'dropdown-menu--active');
+					trigger.focus();
+				}
 			});
 		});
 
@@ -70,24 +75,11 @@
 			}
 		});
 
-		menu.addEventListener('mouseup', (e) => {
-			const target = e.target;
-
-			if (target && target.classList.contains('dropdown-menu__link')) {
-				closeMenu(menu, 'dropdown-menu--active');
-			}
-		});
-
 		lastItem.addEventListener('blur', () => {
-			trigger.focus();
+			closeMenu(menu, 'dropdown-menu--active');
 		});
 
 		trigger.addEventListener('keydown', (e) => {
-			if (e.code === 'Enter') {
-				e.preventDefault();
-				toggleClass(menu, 'dropdown-menu--active');
-			}
-
 			if (e.code === 'Escape') {
 				closeMenu(menu, 'dropdown-menu--active');
 				deleteActiveClassInArr(menuItems, 'dropdown-menu__link--active');
@@ -116,7 +108,6 @@
 
 						if (index > -1) {
 							menuItems[index].click();
-							closeMenu(menu, 'dropdown-menu--active');
 						}
 						break;
 				}
