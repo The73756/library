@@ -1,4 +1,5 @@
 import $ from '../core';
+
 $.prototype.animateOverTime = function (dur, cb, fin) {
 	let timeStart;
 
@@ -24,9 +25,9 @@ $.prototype.animateOverTime = function (dur, cb, fin) {
 	return _animateOverTime;
 };
 
-$.prototype.fadeIn = function (dur, display = 'block', fin, ) {
+$.prototype.fadeIn = function (dur, display, fin) {
 	for (let i = 0; i < this.length; i++) {
-		this[i].style.display = display;
+		this[i].style.display = display || 'block';
 
 		const _fadeIn = (complection) => {
 			this[i].style.opacity = complection;
@@ -39,12 +40,11 @@ $.prototype.fadeIn = function (dur, display = 'block', fin, ) {
 	return this;
 };
 
-$.prototype.fadeOut = function (dur, fin, ) {
+$.prototype.fadeOut = function (dur, fin) {
 	for (let i = 0; i < this.length; i++) {
 
 		const _fadeOut = (complection) => {
 			this[i].style.opacity = 1 - complection;
-
 			if (complection === 1) {
 				this[i].style.display = 'none';
 			}
@@ -57,11 +57,10 @@ $.prototype.fadeOut = function (dur, fin, ) {
 	return this;
 };
 
-$.prototype.fadeToggle = function (dur, display = 'block', fin, ) {
+$.prototype.fadeToggle = function (dur, display, fin) {
 	for (let i = 0; i < this.length; i++) {
-
 		if (window.getComputedStyle(this[i]).display === 'none') {
-			this[i].style.display = display;
+			this[i].style.display = display || 'block';
 
 			const _fadeIn = (complection) => {
 				this[i].style.opacity = complection;
@@ -72,7 +71,6 @@ $.prototype.fadeToggle = function (dur, display = 'block', fin, ) {
 		} else {
 			const _fadeOut = (complection) => {
 				this[i].style.opacity = 1 - complection;
-
 				if (complection === 1) {
 					this[i].style.display = 'none';
 				}
@@ -82,6 +80,6 @@ $.prototype.fadeToggle = function (dur, display = 'block', fin, ) {
 			requestAnimationFrame(ani);
 		}
 	}
-	
+
 	return this;
 };
